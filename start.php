@@ -20,6 +20,7 @@ function actions_feature_init() {
 
 	elgg_register_plugin_hook_handler('register', 'menu:entity', 'actions_feature_entity_menu_setup');
 
+	elgg_unextend_view('js/elgg', 'groups/js');
 	elgg_extend_view('js/elgg', 'feature.js');
 
 	elgg_register_plugin_hook_handler('feature', 'group', 'Elgg\Values::getTrue');
