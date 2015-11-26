@@ -1,0 +1,20 @@
+{
+	"name": "hypejunction/actions_feature",
+	"type": "elgg-plugin",
+	"description": "AJAX Tabs component for Elgg",
+	"homepage": "http://hypejunction.com",
+	"keywords": [
+		"elgg", "plugin", "feature"
+	],
+	"license": "GPL-2.0",
+	"authors": [
+		{
+			"name": "Ismayil Khayredinov",
+			"email": "info@hypejunction.com"
+		}
+	],
+	"require-dev": {
+		"composer/installers": "1.*"
+	}
+}
+
