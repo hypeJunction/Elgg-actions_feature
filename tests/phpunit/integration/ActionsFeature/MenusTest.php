@@ -17,6 +17,19 @@ class MenusTest extends IntegrationTestCase {
 		return '';
 	}
 
+	protected function makeMenuHook(\ElggEntity $entity, array $value = []): Hook {
+		$hook = $this->getMockBuilder(Hook::class)->getMock();
+		$hook->method('getName')->willReturn('register');
+		$hook->method('getType')->willReturn('menu:entity');
+		$hook->method('getValue')->willReturn($value);
+		$hook->method('getEntityParam')->willReturn($entity);
+		$hook->method('getParam')->willReturnCallback(function ($key, $default = null) use ($entity) {
+			return $key === 'entity' ? $entity : $default;
+		});
+		$hook->method('getParams')->willReturn(['entity' => $entity]);
+		return $hook;
+	}
+
 	public function testEntityMenuReturnsVoidWhenNotPermitted(): void {
 		$user = $this->createUser();
 		\elgg_get_session()->setLoggedInUser($user);
@@ -26,13 +39,7 @@ class MenusTest extends IntegrationTestCase {
 			'owner_guid' => $user->guid,
 		]);
 
-		$hook = new Hook(
-			\elgg(),
-			'register',
-			'menu:entity',
-			['entity' => $entity],
-			[]
-		);
+		$hook = $this->makeMenuHook($entity);
 
 		$result = Menus::entityMenu($hook);
 		$this->assertNull($result);
@@ -49,13 +56,7 @@ class MenusTest extends IntegrationTestCase {
 
 		\elgg_register_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
 
-		$hook = new Hook(
-			\elgg(),
-			'register',
-			'menu:entity',
-			['entity' => $group],
-			[]
-		);
+		$hook = $this->makeMenuHook($group);
 
 		$items = Menus::entityMenu($hook);
 		$this->assertIsArray($items);
@@ -79,13 +80,7 @@ class MenusTest extends IntegrationTestCase {
 		$group = $this->createGroup();
 		\elgg_register_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
 
-		$hook = new Hook(
-			\elgg(),
-			'register',
-			'menu:entity',
-			['entity' => $group],
-			[]
-		);
+		$hook = $this->makeMenuHook($group);
 
 		$items = Menus::entityMenu($hook);
 
@@ -113,13 +108,7 @@ class MenusTest extends IntegrationTestCase {
 
 		\elgg_register_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
 
-		$hook = new Hook(
-			\elgg(),
-			'register',
-			'menu:entity',
-			['entity' => $group],
-			[]
-		);
+		$hook = $this->makeMenuHook($group);
 
 		$items = Menus::entityMenu($hook);
 
@@ -143,13 +132,7 @@ class MenusTest extends IntegrationTestCase {
 		$group = $this->createGroup();
 		\elgg_register_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
 
-		$hook = new Hook(
-			\elgg(),
-			'register',
-			'menu:entity',
-			['entity' => $group],
-			[]
-		);
+		$hook = $this->makeMenuHook($group);
 
 		$items = Menus::entityMenu($hook);
 

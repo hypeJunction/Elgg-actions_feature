@@ -92,7 +92,7 @@ class FeatureActionTest extends IntegrationTestCase {
 
 	public function testFeaturedEventCanBeCaught(): void {
 		$fired = false;
-		$handler = function ($event, $type, $entity) use (&$fired) {
+		$handler = function ($event) use (&$fired) {
 			$fired = true;
 			return true;
 		};
@@ -113,7 +113,7 @@ class FeatureActionTest extends IntegrationTestCase {
 
 	public function testUnfeaturedEventCanBeCaught(): void {
 		$fired = false;
-		$handler = function ($event, $type, $entity) use (&$fired) {
+		$handler = function ($event) use (&$fired) {
 			$fired = true;
 			return true;
 		};
