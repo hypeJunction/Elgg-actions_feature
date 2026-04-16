@@ -30,6 +30,7 @@ class FeatureActionTest extends IntegrationTestCase {
     public function testFeaturingSetsMetadataOnObject(): void {
 		$admin = $this->createUser();
 		$admin->makeAdmin();
+		\elgg_get_session()->setLoggedInUser($admin);
 
 		$entity = $this->createObject([
 			'subtype' => 'blog',
@@ -44,6 +45,8 @@ class FeatureActionTest extends IntegrationTestCase {
 		_elgg_services()->entityCache->delete($entity->guid);
 		$loaded = get_entity($entity->guid);
 		$this->assertEquals(1, (int) $loaded->featured);
+
+		\elgg_get_session()->removeLoggedInUser();
 	}
 
 	/**

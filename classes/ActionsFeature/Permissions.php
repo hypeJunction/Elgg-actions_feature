@@ -12,10 +12,8 @@ class Permissions {
 	 */
 	public static function isAllowedType(\ElggEntity $entity): bool {
 		$type = $entity->getType();
-		$subtype = $entity->getSubtype();
-		$hook_type = implode(':', array_filter([$type, $subtype]));
 
-		return (bool) \elgg_trigger_plugin_hook('feature', $hook_type, ['entity' => $entity], false);
+		return (bool) \elgg_trigger_plugin_hook('feature', $type, ['entity' => $entity], false);
 	}
 
 	/**
