@@ -71,12 +71,35 @@ SETTINGS_VALUES
         echo 'Elgg 4.x installed successfully.' . PHP_EOL;
     " 2>&1 || echo "Install completed (check for errors above)."
 
+    # Symlink core plugins needed for browser-based (Playwright) tests.
+    # groups: required to create/view group entities via the UI.
+    for CORE_PLUGIN in groups; do
+        if [ ! -e "/var/www/html/mod/${CORE_PLUGIN}" ]; then
+            ln -s "/var/www/html/vendor/elgg/elgg/mod/${CORE_PLUGIN}" "/var/www/html/mod/${CORE_PLUGIN}"
+            echo "Symlinked core plugin: ${CORE_PLUGIN}"
+        fi
+    done
+
     echo "Activating plugins..."
     php -r "
         require_once 'vendor/autoload.php';
         \$app = \Elgg\Application::getInstance();
         \$app->bootCore();
         _elgg_services()->plugins->generateEntities();
+
+        // Activate core plugins needed for browser tests.
+        foreach (['groups'] as \$core_id) {
+            \$core = elgg_get_plugin_from_id(\$core_id);
+            if (\$core && !\$core->isActive()) {
+                try {
+                    \$core->setPriority('last');
+                    \$core->activate();
+                    echo 'Core plugin ' . \$core_id . ' activated.' . PHP_EOL;
+                } catch (\Throwable \$e) {
+                    echo 'WARNING: failed to activate core plugin ' . \$core_id . ': ' . \$e->getMessage() . PHP_EOL;
+                }
+            }
+        }
 
         // Resolve dep plugin IDs from the plugin's own metadata.
         // Priority: elgg-plugin.php 'plugin.dependencies' (Elgg 4.x) then manifest.xml <requires type='plugin'>.
@@ -140,6 +163,26 @@ SETTINGS_VALUES
             }
         }
     " 2>&1 || echo "Plugin activation completed (check for errors above)."
+
+    # Create a non-admin test user for Playwright tests that need a logged-in non-admin.
+    php -r "
+        require_once 'vendor/autoload.php';
+        \$app = \Elgg\Application::getInstance();
+        \$app->bootCore();
+        \$admin = get_user_by_username('admin');
+        elgg_get_session()->setLoggedInUser(\$admin);
+        if (!get_user_by_username('testuser')) {
+            \$user = new ElggUser();
+            \$user->username = 'testuser';
+            \$user->email = 'testuser@example.com';
+            \$user->name = 'Test User';
+            \$user->setPassword('${ELGG_ADMIN_PASSWORD:-admin12345}');
+            \$user->save();
+            echo 'Created testuser (guid: ' . \$user->guid . ')' . PHP_EOL;
+        } else {
+            echo 'testuser already exists.' . PHP_EOL;
+        }
+    " 2>&1 || true
 
     touch /var/www/html/.elgg-installed
     echo "Elgg 4.x setup complete."

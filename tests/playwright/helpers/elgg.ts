@@ -9,12 +9,14 @@ const DB_CONFIG = {
   database: process.env.ELGG_DB_NAME || 'elgg',
 };
 
-export async function loginAs(page: Page, username: string, password: string = 'testpass123') {
+export async function loginAs(page: Page, username: string, password: string = process.env.ELGG_ADMIN_PASSWORD || 'admin12345') {
   await page.goto('/login');
-  await page.fill('input[name="username"]', username);
-  await page.fill('input[name="password"]', password);
-  await page.click('button[type="submit"]');
-  await page.waitForURL(/\//);
+  // Elgg 4.x has two login forms: a visible main form and a hidden dropdown.
+  // Target the main body form specifically to avoid filling a hidden input.
+  await page.locator('.elgg-page-body input[name="username"]').fill(username);
+  await page.locator('.elgg-page-body input[name="password"]').fill(password);
+  await page.locator('.elgg-page-body button[type="submit"]').click();
+  await page.waitForLoadState('networkidle');
 }
 
 export async function queryDb(sql: string, params: any[] = []) {
