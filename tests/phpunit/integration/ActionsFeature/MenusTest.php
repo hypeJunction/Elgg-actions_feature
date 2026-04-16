@@ -13,11 +13,19 @@ class MenusTest extends IntegrationTestCase {
 	public function down() {
 	}
 
-	public function getPluginID(): string {
+	/**
+     * @return string
+     */
+    public function getPluginID(): string {
 		return '';
 	}
 
-	protected function makeMenuHook(\ElggEntity $entity, array $value = []): Hook {
+	/**
+     * @param ElggEntity $entity
+     * @param array $value
+     * @return Hook
+     */
+    protected function makeMenuHook(\ElggEntity $entity, array $value = []): Hook {
 		$hook = $this->getMockBuilder(Hook::class)->getMock();
 		$hook->method('getName')->willReturn('register');
 		$hook->method('getType')->willReturn('menu:entity');
@@ -30,7 +38,10 @@ class MenusTest extends IntegrationTestCase {
 		return $hook;
 	}
 
-	public function testEntityMenuReturnsVoidWhenNotPermitted(): void {
+	/**
+     * @return void
+     */
+    public function testEntityMenuReturnsVoidWhenNotPermitted(): void {
 		$user = $this->createUser();
 		\elgg_get_session()->setLoggedInUser($user);
 
@@ -47,7 +58,10 @@ class MenusTest extends IntegrationTestCase {
 		\elgg_get_session()->removeLoggedInUser();
 	}
 
-	public function testEntityMenuAddsFeatureAndUnfeatureItemsForAdminOnGroup(): void {
+	/**
+     * @return void
+     */
+    public function testEntityMenuAddsFeatureAndUnfeatureItemsForAdminOnGroup(): void {
 		$admin = $this->createUser();
 		$admin->makeAdmin();
 		\elgg_get_session()->setLoggedInUser($admin);
@@ -72,7 +86,10 @@ class MenusTest extends IntegrationTestCase {
 		\elgg_get_session()->removeLoggedInUser();
 	}
 
-	public function testFeatureItemVisibleAndUnfeatureHiddenWhenNotFeatured(): void {
+	/**
+     * @return void
+     */
+    public function testFeatureItemVisibleAndUnfeatureHiddenWhenNotFeatured(): void {
 		$admin = $this->createUser();
 		$admin->makeAdmin();
 		\elgg_get_session()->setLoggedInUser($admin);
@@ -96,7 +113,10 @@ class MenusTest extends IntegrationTestCase {
 		\elgg_get_session()->removeLoggedInUser();
 	}
 
-	public function testUnfeatureItemVisibleAndFeatureHiddenWhenFeatured(): void {
+	/**
+     * @return void
+     */
+    public function testUnfeatureItemVisibleAndFeatureHiddenWhenFeatured(): void {
 		$admin = $this->createUser();
 		$admin->makeAdmin();
 		\elgg_get_session()->setLoggedInUser($admin);
@@ -124,7 +144,10 @@ class MenusTest extends IntegrationTestCase {
 		\elgg_get_session()->removeLoggedInUser();
 	}
 
-	public function testEntityMenuHrefPointsToFeatureAction(): void {
+	/**
+     * @return void
+     */
+    public function testEntityMenuHrefPointsToFeatureAction(): void {
 		$admin = $this->createUser();
 		$admin->makeAdmin();
 		\elgg_get_session()->setLoggedInUser($admin);

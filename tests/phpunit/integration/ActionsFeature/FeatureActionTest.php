@@ -17,11 +17,17 @@ class FeatureActionTest extends IntegrationTestCase {
 	public function down() {
 	}
 
-	public function getPluginID(): string {
+	/**
+     * @return string
+     */
+    public function getPluginID(): string {
 		return '';
 	}
 
-	public function testFeaturingSetsMetadataOnObject(): void {
+	/**
+     * @return void
+     */
+    public function testFeaturingSetsMetadataOnObject(): void {
 		$admin = $this->createUser();
 		$admin->makeAdmin();
 
@@ -40,7 +46,10 @@ class FeatureActionTest extends IntegrationTestCase {
 		$this->assertEquals(1, (int) $loaded->featured);
 	}
 
-	public function testUnfeaturingClearsMetadataOnObject(): void {
+	/**
+     * @return void
+     */
+    public function testUnfeaturingClearsMetadataOnObject(): void {
 		$admin = $this->createUser();
 		$admin->makeAdmin();
 
@@ -60,7 +69,10 @@ class FeatureActionTest extends IntegrationTestCase {
 		$this->assertEmpty($loaded->featured);
 	}
 
-	public function testFeaturingGroupAlsoSetsFeaturedGroupFlag(): void {
+	/**
+     * @return void
+     */
+    public function testFeaturingGroupAlsoSetsFeaturedGroupFlag(): void {
 		$group = $this->createGroup();
 
 		$group->featured = true;
@@ -73,7 +85,10 @@ class FeatureActionTest extends IntegrationTestCase {
 		$this->assertEquals('yes', $loaded->featured_group);
 	}
 
-	public function testUnfeaturingGroupClearsFeaturedGroupFlag(): void {
+	/**
+     * @return void
+     */
+    public function testUnfeaturingGroupClearsFeaturedGroupFlag(): void {
 		$group = $this->createGroup();
 
 		$group->featured = true;
@@ -90,7 +105,10 @@ class FeatureActionTest extends IntegrationTestCase {
 		$this->assertEquals('no', $loaded->featured_group);
 	}
 
-	public function testFeaturedEventCanBeCaught(): void {
+	/**
+     * @return void
+     */
+    public function testFeaturedEventCanBeCaught(): void {
 		$fired = false;
 		$handler = function ($event) use (&$fired) {
 			$fired = true;
@@ -111,7 +129,10 @@ class FeatureActionTest extends IntegrationTestCase {
 		\elgg_unregister_event_handler('featured', 'object', $handler);
 	}
 
-	public function testUnfeaturedEventCanBeCaught(): void {
+	/**
+     * @return void
+     */
+    public function testUnfeaturedEventCanBeCaught(): void {
 		$fired = false;
 		$handler = function ($event) use (&$fired) {
 			$fired = true;

@@ -1,20 +1,29 @@
 {
 	"name": "hypejunction/actions_feature",
 	"type": "elgg-plugin",
-	"description": "AJAX Tabs component for Elgg",
+	"description": "API for featuring items",
 	"homepage": "http://hypejunction.com",
 	"keywords": [
 		"elgg", "plugin", "feature"
 	],
-	"license": "GPL-2.0",
+	"license": "GPL-2.0-or-later",
 	"authors": [
 		{
 			"name": "Ismayil Khayredinov",
 			"email": "info@hypejunction.com"
 		}
 	],
-	"require-dev": {
-		"composer/installers": "1.*"
+	"require": {
+		"php": "^7.4",
+		"elgg/elgg": "^4.0",
+		"composer/installers": "^2.0"
+	},
+	"config": {
+		"allow-plugins": {
+			"composer/installers": true
+		}
+	},
+	"extra": {
+		"elgg-plugin-id": "actions_feature"
 	}
 }
-

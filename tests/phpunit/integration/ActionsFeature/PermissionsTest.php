@@ -12,11 +12,17 @@ class PermissionsTest extends IntegrationTestCase {
 	public function down() {
 	}
 
-	public function getPluginID(): string {
+	/**
+     * @return string
+     */
+    public function getPluginID(): string {
 		return '';
 	}
 
-	public function testIsAllowedTypeReturnsFalseByDefaultForObject(): void {
+	/**
+     * @return void
+     */
+    public function testIsAllowedTypeReturnsFalseByDefaultForObject(): void {
 		$owner = $this->createUser();
 		$object = $this->createObject([
 			'subtype' => 'blog',
@@ -25,7 +31,10 @@ class PermissionsTest extends IntegrationTestCase {
 		$this->assertFalse(Permissions::isAllowedType($object));
 	}
 
-	public function testIsAllowedTypeReturnsTrueForGroupViaPluginHook(): void {
+	/**
+     * @return void
+     */
+    public function testIsAllowedTypeReturnsTrueForGroupViaPluginHook(): void {
 		// The plugin registers a 'feature', 'group' hook that returns true
 		$group = $this->createGroup();
 		// Register the hook handler in case the plugin isn't active in test DB
@@ -34,7 +43,10 @@ class PermissionsTest extends IntegrationTestCase {
 		\elgg_unregister_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
 	}
 
-	public function testCanFeatureReturnsFalseForNonLoggedInUser(): void {
+	/**
+     * @return void
+     */
+    public function testCanFeatureReturnsFalseForNonLoggedInUser(): void {
 		$group = $this->createGroup();
 		\elgg_register_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
 
@@ -46,7 +58,10 @@ class PermissionsTest extends IntegrationTestCase {
 		\elgg_unregister_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
 	}
 
-	public function testCanFeatureReturnsTrueForAdmin(): void {
+	/**
+     * @return void
+     */
+    public function testCanFeatureReturnsTrueForAdmin(): void {
 		$admin = $this->createUser();
 		$admin->makeAdmin();
 		$group = $this->createGroup();
@@ -56,7 +71,10 @@ class PermissionsTest extends IntegrationTestCase {
 		\elgg_unregister_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
 	}
 
-	public function testCanFeatureReturnsFalseForNonAdmin(): void {
+	/**
+     * @return void
+     */
+    public function testCanFeatureReturnsFalseForNonAdmin(): void {
 		$user = $this->createUser();
 		$group = $this->createGroup();
 
@@ -65,7 +83,10 @@ class PermissionsTest extends IntegrationTestCase {
 		\elgg_unregister_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
 	}
 
-	public function testCanFeatureReturnsFalseWhenTypeNotAllowed(): void {
+	/**
+     * @return void
+     */
+    public function testCanFeatureReturnsFalseWhenTypeNotAllowed(): void {
 		$admin = $this->createUser();
 		$admin->makeAdmin();
 		$object = $this->createObject([
@@ -76,7 +97,10 @@ class PermissionsTest extends IntegrationTestCase {
 		$this->assertFalse(Permissions::canFeature($object, $admin));
 	}
 
-	public function testPermissionsCheckHookCanOverrideDefault(): void {
+	/**
+     * @return void
+     */
+    public function testPermissionsCheckHookCanOverrideDefault(): void {
 		$user = $this->createUser();
 		$group = $this->createGroup();
 
