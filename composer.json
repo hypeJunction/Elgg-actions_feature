@@ -4,7 +4,9 @@
 	"description": "API for featuring items",
 	"homepage": "http://hypejunction.com",
 	"keywords": [
-		"elgg", "plugin", "feature"
+		"elgg",
+		"plugin",
+		"feature"
 	],
 	"license": "GPL-2.0-or-later",
 	"authors": [
@@ -24,6 +26,8 @@
 		}
 	},
 	"extra": {
-		"elgg-plugin-id": "actions_feature"
+		"elgg-plugin": {
+			"id": "actions_feature"
+		}
 	}
 }
