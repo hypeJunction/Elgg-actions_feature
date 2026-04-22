@@ -35,12 +35,12 @@ class PermissionsTest extends IntegrationTestCase {
      * @return void
      */
     public function testIsAllowedTypeReturnsTrueForGroupViaPluginHook(): void {
-		// The plugin registers a 'feature', 'group' hook that returns true
+		// The plugin registers a 'feature', 'group' event that returns true
 		$group = $this->createGroup();
-		// Register the hook handler in case the plugin isn't active in test DB
-		\elgg_register_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
+		// Register the event handler in case the plugin isn't active in test DB
+		\elgg_register_event_handler('feature', 'group', '\Elgg\Values::getTrue');
 		$this->assertTrue(Permissions::isAllowedType($group));
-		\elgg_unregister_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
+		\elgg_unregister_event_handler('feature', 'group', '\Elgg\Values::getTrue');
 	}
 
 	/**
@@ -48,14 +48,13 @@ class PermissionsTest extends IntegrationTestCase {
      */
     public function testCanFeatureReturnsFalseForNonLoggedInUser(): void {
 		$group = $this->createGroup();
-		\elgg_register_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
+		\elgg_register_event_handler('feature', 'group', '\Elgg\Values::getTrue');
 
 		// Pass null user, not logged in
-		$session = \elgg_get_session();
-		$session->removeLoggedInUser();
+		_elgg_services()->session_manager->removeLoggedInUser();
 
 		$this->assertFalse(Permissions::canFeature($group, null));
-		\elgg_unregister_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
+		\elgg_unregister_event_handler('feature', 'group', '\Elgg\Values::getTrue');
 	}
 
 	/**
@@ -66,9 +65,9 @@ class PermissionsTest extends IntegrationTestCase {
 		$admin->makeAdmin();
 		$group = $this->createGroup();
 
-		\elgg_register_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
+		\elgg_register_event_handler('feature', 'group', '\Elgg\Values::getTrue');
 		$this->assertTrue(Permissions::canFeature($group, $admin));
-		\elgg_unregister_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
+		\elgg_unregister_event_handler('feature', 'group', '\Elgg\Values::getTrue');
 	}
 
 	/**
@@ -78,9 +77,9 @@ class PermissionsTest extends IntegrationTestCase {
 		$user = $this->createUser();
 		$group = $this->createGroup();
 
-		\elgg_register_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
+		\elgg_register_event_handler('feature', 'group', '\Elgg\Values::getTrue');
 		$this->assertFalse(Permissions::canFeature($group, $user));
-		\elgg_unregister_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
+		\elgg_unregister_event_handler('feature', 'group', '\Elgg\Values::getTrue');
 	}
 
 	/**
@@ -93,7 +92,7 @@ class PermissionsTest extends IntegrationTestCase {
 			'subtype' => 'blog',
 			'owner_guid' => $admin->guid,
 		]);
-		// No hook registered for blog -> not allowed
+		// No event registered for blog -> not allowed
 		$this->assertFalse(Permissions::canFeature($object, $admin));
 	}
 
@@ -104,12 +103,12 @@ class PermissionsTest extends IntegrationTestCase {
 		$user = $this->createUser();
 		$group = $this->createGroup();
 
-		\elgg_register_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
-		\elgg_register_plugin_hook_handler('permissions_check:feature', 'group', '\Elgg\Values::getTrue');
+		\elgg_register_event_handler('feature', 'group', '\Elgg\Values::getTrue');
+		\elgg_register_event_handler('permissions_check:feature', 'group', '\Elgg\Values::getTrue');
 
 		$this->assertTrue(Permissions::canFeature($group, $user));
 
-		\elgg_unregister_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
-		\elgg_unregister_plugin_hook_handler('permissions_check:feature', 'group', '\Elgg\Values::getTrue');
+		\elgg_unregister_event_handler('feature', 'group', '\Elgg\Values::getTrue');
+		\elgg_unregister_event_handler('permissions_check:feature', 'group', '\Elgg\Values::getTrue');
 	}
 }

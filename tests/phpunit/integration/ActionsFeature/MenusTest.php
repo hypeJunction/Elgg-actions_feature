@@ -2,7 +2,7 @@
 
 namespace ActionsFeature;
 
-use Elgg\Hook;
+use Elgg\Event;
 use Elgg\IntegrationTestCase;
 
 class MenusTest extends IntegrationTestCase {
@@ -21,21 +21,21 @@ class MenusTest extends IntegrationTestCase {
 	}
 
 	/**
-     * @param ElggEntity $entity
+     * @param \ElggEntity $entity
      * @param array $value
-     * @return Hook
+     * @return Event
      */
-    protected function makeMenuHook(\ElggEntity $entity, array $value = []): Hook {
-		$hook = $this->getMockBuilder(Hook::class)->getMock();
-		$hook->method('getName')->willReturn('register');
-		$hook->method('getType')->willReturn('menu:entity');
-		$hook->method('getValue')->willReturn($value);
-		$hook->method('getEntityParam')->willReturn($entity);
-		$hook->method('getParam')->willReturnCallback(function ($key, $default = null) use ($entity) {
+    protected function makeMenuEvent(\ElggEntity $entity, array $value = []): Event {
+		$event = $this->getMockBuilder(Event::class)->disableOriginalConstructor()->getMock();
+		$event->method('getName')->willReturn('register');
+		$event->method('getType')->willReturn('menu:entity');
+		$event->method('getValue')->willReturn($value);
+		$event->method('getEntityParam')->willReturn($entity);
+		$event->method('getParam')->willReturnCallback(function ($key, $default = null) use ($entity) {
 			return $key === 'entity' ? $entity : $default;
 		});
-		$hook->method('getParams')->willReturn(['entity' => $entity]);
-		return $hook;
+		$event->method('getParams')->willReturn(['entity' => $entity]);
+		return $event;
 	}
 
 	/**
@@ -43,19 +43,19 @@ class MenusTest extends IntegrationTestCase {
      */
     public function testEntityMenuReturnsVoidWhenNotPermitted(): void {
 		$user = $this->createUser();
-		\elgg_get_session()->setLoggedInUser($user);
+		_elgg_services()->session_manager->setLoggedInUser($user);
 
 		$entity = $this->createObject([
 			'subtype' => 'blog',
 			'owner_guid' => $user->guid,
 		]);
 
-		$hook = $this->makeMenuHook($entity);
+		$event = $this->makeMenuEvent($entity);
 
-		$result = Menus::entityMenu($hook);
+		$result = Menus::entityMenu($event);
 		$this->assertNull($result);
 
-		\elgg_get_session()->removeLoggedInUser();
+		_elgg_services()->session_manager->removeLoggedInUser();
 	}
 
 	/**
@@ -64,15 +64,15 @@ class MenusTest extends IntegrationTestCase {
     public function testEntityMenuAddsFeatureAndUnfeatureItemsForAdminOnGroup(): void {
 		$admin = $this->createUser();
 		$admin->makeAdmin();
-		\elgg_get_session()->setLoggedInUser($admin);
+		_elgg_services()->session_manager->setLoggedInUser($admin);
 
 		$group = $this->createGroup();
 
-		\elgg_register_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
+		\elgg_register_event_handler('feature', 'group', '\Elgg\Values::getTrue');
 
-		$hook = $this->makeMenuHook($group);
+		$event = $this->makeMenuEvent($group);
 
-		$items = Menus::entityMenu($hook);
+		$items = Menus::entityMenu($event);
 		$this->assertIsArray($items);
 		$this->assertCount(2, $items);
 
@@ -82,8 +82,8 @@ class MenusTest extends IntegrationTestCase {
 		$this->assertContains('feature', $names);
 		$this->assertContains('unfeature', $names);
 
-		\elgg_unregister_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
-		\elgg_get_session()->removeLoggedInUser();
+		\elgg_unregister_event_handler('feature', 'group', '\Elgg\Values::getTrue');
+		_elgg_services()->session_manager->removeLoggedInUser();
 	}
 
 	/**
@@ -92,14 +92,14 @@ class MenusTest extends IntegrationTestCase {
     public function testFeatureItemVisibleAndUnfeatureHiddenWhenNotFeatured(): void {
 		$admin = $this->createUser();
 		$admin->makeAdmin();
-		\elgg_get_session()->setLoggedInUser($admin);
+		_elgg_services()->session_manager->setLoggedInUser($admin);
 
 		$group = $this->createGroup();
-		\elgg_register_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
+		\elgg_register_event_handler('feature', 'group', '\Elgg\Values::getTrue');
 
-		$hook = $this->makeMenuHook($group);
+		$event = $this->makeMenuEvent($group);
 
-		$items = Menus::entityMenu($hook);
+		$items = Menus::entityMenu($event);
 
 		$byName = [];
 		foreach ($items as $i) {
@@ -109,8 +109,8 @@ class MenusTest extends IntegrationTestCase {
 		$this->assertNotEquals('hidden', $byName['feature']->getItemClass());
 		$this->assertStringContainsString('hidden', (string) $byName['unfeature']->getItemClass());
 
-		\elgg_unregister_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
-		\elgg_get_session()->removeLoggedInUser();
+		\elgg_unregister_event_handler('feature', 'group', '\Elgg\Values::getTrue');
+		_elgg_services()->session_manager->removeLoggedInUser();
 	}
 
 	/**
@@ -119,18 +119,18 @@ class MenusTest extends IntegrationTestCase {
     public function testUnfeatureItemVisibleAndFeatureHiddenWhenFeatured(): void {
 		$admin = $this->createUser();
 		$admin->makeAdmin();
-		\elgg_get_session()->setLoggedInUser($admin);
+		_elgg_services()->session_manager->setLoggedInUser($admin);
 
 		$group = $this->createGroup();
 		$group->featured = true;
 		$group->featured_group = 'yes';
 		$group->save();
 
-		\elgg_register_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
+		\elgg_register_event_handler('feature', 'group', '\Elgg\Values::getTrue');
 
-		$hook = $this->makeMenuHook($group);
+		$event = $this->makeMenuEvent($group);
 
-		$items = Menus::entityMenu($hook);
+		$items = Menus::entityMenu($event);
 
 		$byName = [];
 		foreach ($items as $i) {
@@ -140,8 +140,8 @@ class MenusTest extends IntegrationTestCase {
 		$this->assertStringContainsString('hidden', (string) $byName['feature']->getItemClass());
 		$this->assertNotEquals('hidden', $byName['unfeature']->getItemClass());
 
-		\elgg_unregister_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
-		\elgg_get_session()->removeLoggedInUser();
+		\elgg_unregister_event_handler('feature', 'group', '\Elgg\Values::getTrue');
+		_elgg_services()->session_manager->removeLoggedInUser();
 	}
 
 	/**
@@ -150,14 +150,14 @@ class MenusTest extends IntegrationTestCase {
     public function testEntityMenuHrefPointsToFeatureAction(): void {
 		$admin = $this->createUser();
 		$admin->makeAdmin();
-		\elgg_get_session()->setLoggedInUser($admin);
+		_elgg_services()->session_manager->setLoggedInUser($admin);
 
 		$group = $this->createGroup();
-		\elgg_register_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
+		\elgg_register_event_handler('feature', 'group', '\Elgg\Values::getTrue');
 
-		$hook = $this->makeMenuHook($group);
+		$event = $this->makeMenuEvent($group);
 
-		$items = Menus::entityMenu($hook);
+		$items = Menus::entityMenu($event);
 
 		$byName = [];
 		foreach ($items as $i) {
@@ -168,7 +168,7 @@ class MenusTest extends IntegrationTestCase {
 		$this->assertStringContainsString('action/unfeature', $byName['unfeature']->getHref());
 		$this->assertStringContainsString('guid=' . $group->guid, $byName['feature']->getHref());
 
-		\elgg_unregister_plugin_hook_handler('feature', 'group', '\Elgg\Values::getTrue');
-		\elgg_get_session()->removeLoggedInUser();
+		\elgg_unregister_event_handler('feature', 'group', '\Elgg\Values::getTrue');
+		_elgg_services()->session_manager->removeLoggedInUser();
 	}
 }
