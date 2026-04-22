@@ -14,7 +14,7 @@ class Permissions
     {
         $type = $entity->getType();
 
-        return (bool) \elgg_trigger_plugin_hook('feature', $type, ['entity' => $entity], false);
+        return (bool) \elgg_trigger_event_results('feature', $type, ['entity' => $entity], false);
     }
 
     /**
@@ -44,6 +44,6 @@ class Permissions
             'user' => $user,
         ];
 
-        return (bool) \elgg_trigger_plugin_hook('permissions_check:feature', $entity->getType(), $params, $default);
+        return (bool) \elgg_trigger_event_results('permissions_check:feature', $entity->getType(), $params, $default);
     }
 }

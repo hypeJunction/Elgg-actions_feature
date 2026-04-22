@@ -8,7 +8,7 @@ return [
 		'unfeature' => [],
 	],
 
-	'hooks' => [
+	'events' => [
 		'register' => [
 			'menu:entity' => [
 				\ActionsFeature\Menus::class . '::entityMenu' => [],

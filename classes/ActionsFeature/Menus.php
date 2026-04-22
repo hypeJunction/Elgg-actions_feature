@@ -2,25 +2,25 @@
 
 namespace ActionsFeature;
 
-use Elgg\Hook;
+use Elgg\Event;
 
 class Menus
 {
     /**
      * Add feature/unfeature menu items
      *
-     * @param \Elgg\Hook $hook 'register', 'menu:entity'
+     * @param \Elgg\Event $event 'register', 'menu:entity'
      * @return \ElggMenuItem[]|void
      */
-    public static function entityMenu(Hook $hook)
+    public static function entityMenu(Event $event)
     {
-        $entity = $hook->getEntityParam();
+        $entity = $event->getEntityParam();
 
         if (!$entity instanceof \ElggEntity || !Permissions::canFeature($entity)) {
             return;
         }
 
-        $return = $hook->getValue();
+        $return = $event->getValue();
 
         $featured = $entity->featured || $entity->featured_group == 'yes';
 
