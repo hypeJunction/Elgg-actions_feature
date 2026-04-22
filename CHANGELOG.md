@@ -1,6 +1,23 @@
 # Changelog
 
-## [Unreleased] — Elgg 4.x migration
+## [Unreleased] — Elgg 5.x migration
+
+### Breaking Changes
+
+- Minimum Elgg version is now **5.0**. Elgg 4.x is no longer supported.
+- PHP minimum is now **8.2**.
+- `elgg-plugin.php` `'hooks'` key replaced by `'events'` key (Elgg 5.x unified event system).
+- Extension plugins must use `'events'` key instead of `'hooks'` when declaring `feature`/`permissions_check:feature` handlers.
+
+### Changed
+
+- `composer.json`: `php >=8.2`, `elgg/elgg ~5.1.0`.
+- `ActionsFeature\Menus::entityMenu()`: parameter type hint changed from `\Elgg\Hook` to `\Elgg\Event`.
+- `ActionsFeature\Permissions`: `elgg_trigger_plugin_hook()` replaced by `elgg_trigger_event_results()`.
+- Docker test stack: PHP 7.4→8.2, MySQL 5.7→8.0, `elgg-composer.json` targets `~5.1.0`.
+- PHPUnit tests adapted: `session_manager` service, `elgg_register_event_handler`, `\Elgg\Event` mock.
+
+## [4.0.0] — Elgg 4.x migration
 
 ### Breaking Changes
 
