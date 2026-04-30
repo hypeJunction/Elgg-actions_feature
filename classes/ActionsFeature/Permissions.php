@@ -2,48 +2,49 @@
 
 namespace ActionsFeature;
 
-class Permissions
-{
-    /**
-     * Check if entity type is registered for feature/unfeature
-     *
-     * @param \ElggEntity $entity Entity to be featured
-     * @return bool
-     */
-    public static function isAllowedType(\ElggEntity $entity): bool
-    {
-        $type = $entity->getType();
+/**
+ * Permission checks for feature/unfeature actions.
+ */
+class Permissions {
 
-        return (bool) \elgg_trigger_event_results('feature', $type, ['entity' => $entity], false);
-    }
+	/**
+	 * Check if entity type is registered for feature/unfeature
+	 *
+	 * @param \ElggEntity $entity Entity to be featured
+	 * @return bool
+	 */
+	public static function isAllowedType(\ElggEntity $entity): bool {
+		$type = $entity->getType();
 
-    /**
-     * Check if user can feature the entity
-     *
-     * @param \ElggEntity $entity Entity to be featured
-     * @param \ElggUser|null $user User to perform the action
-     * @return bool
-     */
-    public static function canFeature(\ElggEntity $entity, \ElggUser $user = null): bool
-    {
-        if (!isset($user)) {
-            $user = \elgg_get_logged_in_user_entity();
-        }
+		return (bool) \elgg_trigger_event_results('feature', $type, ['entity' => $entity], false);
+	}
 
-        if (!$entity instanceof \ElggEntity || !$user instanceof \ElggUser) {
-            return false;
-        }
+	/**
+	 * Check if user can feature the entity
+	 *
+	 * @param \ElggEntity    $entity Entity to be featured
+	 * @param \ElggUser|null $user   User to perform the action
+	 * @return bool
+	 */
+	public static function canFeature(\ElggEntity $entity, \ElggUser $user = null): bool {
+		if (!isset($user)) {
+			$user = \elgg_get_logged_in_user_entity();
+		}
 
-        if (!self::isAllowedType($entity)) {
-            return false;
-        }
+		if (!$entity instanceof \ElggEntity || !$user instanceof \ElggUser) {
+			return false;
+		}
 
-        $default = $user->isAdmin();
-        $params = [
-            'entity' => $entity,
-            'user' => $user,
-        ];
+		if (!self::isAllowedType($entity)) {
+			return false;
+		}
 
-        return (bool) \elgg_trigger_event_results('permissions_check:feature', $entity->getType(), $params, $default);
-    }
+		$default = $user->isAdmin();
+		$params = [
+			'entity' => $entity,
+			'user' => $user,
+		];
+
+		return (bool) \elgg_trigger_event_results('permissions_check:feature', $entity->getType(), $params, $default);
+	}
 }
