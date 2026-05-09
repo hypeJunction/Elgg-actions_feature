@@ -1,6 +1,6 @@
 {
 	"name": "hypejunction/actions_feature",
-	"version": "6.0.0",
+	"version": "7.0.0",
 	"type": "elgg-plugin",
 	"description": "API for featuring items",
 	"homepage": "http://hypejunction.com",
@@ -17,8 +17,8 @@
 		}
 	],
 	"require": {
-		"php": ">=8.1",
-		"elgg/elgg": "~6.1.0",
+		"php": ">=8.3",
+		"elgg/elgg": "~7.0.0",
 		"ext-intl": "*",
 		"composer/installers": "^2.0"
 	},
