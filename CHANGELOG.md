@@ -1,5 +1,22 @@
 # Changelog
 
+## [6.0.0] (2026-05-09) — Elgg 6.x migration
+
+### Breaking Changes
+
+- Minimum Elgg version is now **6.0**. Elgg 5.x is no longer supported.
+- PHP minimum is now **8.1**.
+- AMD/RequireJS removed — `feature.js` converted to ES module.
+- `elgg_require_js('feature')` → `elgg_import_esm('feature')`.
+
+### Changes
+
+- Bumped `elgg/elgg` to `~6.1.0`, added `ext-intl`
+- Converted `views/default/feature.js` from AMD to ES module
+- Updated Docker stack to Elgg 6.x (PHPUnit ^10.5)
+
+---
+
 ## [Unreleased] — Elgg 5.x migration
 
 ### Breaking Changes

@@ -1,3 +1,3 @@
-require(['elgg'], function (elgg) {
-	elgg.ui.registerTogglableMenuItems('feature', 'unfeature');
-});
+import elgg from 'elgg';
+
+elgg.ui.registerTogglableMenuItems('feature', 'unfeature');

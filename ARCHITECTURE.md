@@ -1,8 +1,8 @@
-# actions_feature — Architecture (Elgg 5.x)
+# actions_feature — Architecture (Elgg 6.x)
 
 ## Overview
 
-`actions_feature` is a small Elgg 5.x plugin that lets admins mark entities
+`actions_feature` is a small Elgg 6.x plugin that lets admins mark entities
 as "featured". It provides permission events, entity-menu actions, and a DB
 toggle pattern built entirely on Elgg's metadata API.
 
@@ -97,3 +97,12 @@ the active item has no class, the inactive item has `'hidden'`.
   produce `'group:group'` — a hook name that never matches handlers registered
   for `'feature', 'group'`
 - `composer.json` updated with `elgg/elgg: ^4.0` and `composer/installers: ^2.0`
+
+## Migration Notes (5.x → 6.x)
+
+- `composer.json`: `php >=8.1`, `elgg/elgg ~6.1.0`, added `ext-intl`; version `6.0.0`
+- `elgg-plugin.php`: version bumped `5.0.0 → 6.0.0`
+- `views/default/feature.js`: converted from AMD `require(['elgg'], cb)` to ES module `import elgg from 'elgg'`
+- `Bootstrap::init()`: `elgg_require_js('feature')` → `elgg_import_esm('feature')` (AMD removed in 6.x)
+- Docker stack updated to Elgg 6.x (PHPUnit ^10.5)
+- No data migration required

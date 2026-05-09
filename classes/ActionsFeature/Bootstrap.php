@@ -13,6 +13,6 @@ class Bootstrap extends DefaultPluginBootstrap {
 	 * {@inheritdoc}
 	 */
 	public function init() {
-		\elgg_require_js('feature');
+		\elgg_import_esm('feature');
 	}
 }
