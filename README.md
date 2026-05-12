@@ -1,6 +1,6 @@
 Feature Action for Elgg
 =======================
-![Elgg 7.x](https://img.shields.io/badge/Elgg-7.x-orange.svg?style=flat-square)
+![Elgg 4.x](https://img.shields.io/badge/Elgg-4.x-orange.svg?style=flat-square)
 
 ## Features
 
