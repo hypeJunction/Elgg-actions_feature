@@ -1,6 +1,5 @@
 {
 	"name": "hypejunction/actions_feature",
-	"version": "7.0.0",
 	"type": "elgg-plugin",
 	"description": "API for featuring items",
 	"homepage": "http://hypejunction.com",
