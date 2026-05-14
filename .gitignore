@@ -1,0 +1,10 @@
+# Test runner artifacts
+tests/.phpunit.result.cache
+tests/.phpunit.cache/
+tests/playwright/node_modules/
+tests/playwright/package-lock.json
+tests/playwright/playwright-report/
+tests/playwright/test-results/
+
+# Docker scaffold local env
+docker/.env

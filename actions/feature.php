@@ -1,16 +1,16 @@
 <?php
 
+use ActionsFeature\Permissions;
+
 $guid = get_input('guid');
 $entity = get_entity($guid);
 
 if (!$entity instanceof ElggEntity) {
-	register_error(elgg_echo('actions:feature:item_not_found'));
-	forward(REFERRER);
+	return elgg_error_response(elgg_echo('actions:feature:item_not_found'));
 }
 
-if (!actions_feature_can_feature($entity)) {
-	register_error(elgg_echo('actions:feature:permission_denied'));
-	forward(REFERRER);
+if (!Permissions::canFeature($entity)) {
+	return elgg_error_response(elgg_echo('actions:feature:permission_denied'));
 }
 
 // determine what name to show on success
@@ -20,8 +20,7 @@ if (!$display_name) {
 }
 
 if ($entity->featured) {
-	register_error(elgg_echo('actions:feature:error', [$display_name]));
-	forward(REFERRER);
+	return elgg_error_response(elgg_echo('actions:feature:error', [$display_name]));
 }
 
 $entity->featured = true;
@@ -32,5 +31,4 @@ if ($entity instanceof ElggGroup) {
 
 elgg_trigger_event('featured', $entity->getType(), $entity);
 
-system_message(elgg_echo('actions:feature:success', [$display_name]));
-forward(REFERRER);
+return elgg_ok_response('', elgg_echo('actions:feature:success', [$display_name]));
