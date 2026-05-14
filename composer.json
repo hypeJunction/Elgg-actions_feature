@@ -2,7 +2,7 @@
 	"name": "hypejunction/actions_feature",
 	"type": "elgg-plugin",
 	"description": "API for featuring items",
-	"homepage": "http://hypejunction.com",
+	"homepage": "https://github.com/hypeJunction/Elgg-actions_feature",
 	"keywords": [
 		"elgg",
 		"plugin",
@@ -12,7 +12,7 @@
 	"authors": [
 		{
 			"name": "Ismayil Khayredinov",
-			"email": "info@hypejunction.com"
+			"email": "ismayil.khayredinov@gmail.com"
 		}
 	],
 	"require": {
