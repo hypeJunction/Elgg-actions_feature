@@ -1,28 +1,28 @@
 {
-	"name": "hypejunction/actions_feature",
-	"version": "4.0.0",
-	"type": "elgg-plugin",
-	"description": "API for featuring items",
-	"homepage": "https://github.com/hypeJunction/Elgg-actions_feature",
-	"keywords": [
-		"elgg",
-		"plugin",
-		"feature"
-	],
-	"license": "GPL-2.0-or-later",
-	"require": {
-		"php": "^7.4",
-		"elgg/elgg": "^4.0",
-		"composer/installers": "^2.0"
-	},
-	"config": {
-		"allow-plugins": {
-			"composer/installers": true
-		}
-	},
-	"extra": {
-		"elgg-plugin": {
-			"id": "actions_feature"
-		}
-	}
+    "name": "hypejunction/actions_feature",
+    "version": "4.0.0",
+    "type": "elgg-plugin",
+    "description": "API for featuring items",
+    "homepage": "https://github.com/hypeJunction/Elgg-actions_feature",
+    "keywords": [
+        "elgg",
+        "plugin",
+        "feature"
+    ],
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": "^7.4|^8.0",
+        "elgg/elgg": "^4.0",
+        "composer/installers": "^2.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    },
+    "extra": {
+        "elgg-plugin": {
+            "id": "actions_feature"
+        }
+    }
 }
