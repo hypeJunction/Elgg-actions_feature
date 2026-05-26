@@ -42,7 +42,7 @@ class FeatureActionTest extends IntegrationTestCase {
 		$entity->featured = true;
 		$this->assertTrue($entity->save() !== false);
 
-		_elgg_services()->entityCache->delete($entity->guid);
+		\_elgg_services()->entityCache->delete($entity->guid);
 		$loaded = get_entity($entity->guid);
 		$this->assertEquals(1, (int) $loaded->featured);
 
@@ -67,7 +67,7 @@ class FeatureActionTest extends IntegrationTestCase {
 		$entity->featured = false;
 		$entity->save();
 
-		_elgg_services()->entityCache->delete($entity->guid);
+		\_elgg_services()->entityCache->delete($entity->guid);
 		$loaded = get_entity($entity->guid);
 		$this->assertEmpty($loaded->featured);
 	}
@@ -82,7 +82,7 @@ class FeatureActionTest extends IntegrationTestCase {
 		$group->featured_group = 'yes';
 		$group->save();
 
-		_elgg_services()->entityCache->delete($group->guid);
+		\_elgg_services()->entityCache->delete($group->guid);
 		$loaded = get_entity($group->guid);
 		$this->assertEquals(1, (int) $loaded->featured);
 		$this->assertEquals('yes', $loaded->featured_group);
@@ -102,7 +102,7 @@ class FeatureActionTest extends IntegrationTestCase {
 		$group->featured_group = 'no';
 		$group->save();
 
-		_elgg_services()->entityCache->delete($group->guid);
+		\_elgg_services()->entityCache->delete($group->guid);
 		$loaded = get_entity($group->guid);
 		$this->assertEmpty($loaded->featured);
 		$this->assertEquals('no', $loaded->featured_group);
