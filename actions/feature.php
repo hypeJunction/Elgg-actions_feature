@@ -3,7 +3,7 @@
 use ActionsFeature\Permissions;
 
 $guid = get_input('guid');
-$entity = get_entity($guid);
+$entity = $guid ? get_entity((int) $guid) : null;
 
 if (!$entity instanceof ElggEntity) {
 	return elgg_error_response(elgg_echo('actions:feature:item_not_found'));

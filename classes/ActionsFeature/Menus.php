@@ -34,6 +34,7 @@ class Menus {
 			]),
 			'priority' => 300,
 			'item_class' => $featured ? 'hidden' : '',
+			'data-toggle' => 'unfeature',
 		]);
 
 		$return[] = \ElggMenuItem::factory([
@@ -44,6 +45,7 @@ class Menus {
 			]),
 			'priority' => 300,
 			'item_class' => $featured ? '' : 'hidden',
+			'data-toggle' => 'feature',
 		]);
 
 		return $return;
